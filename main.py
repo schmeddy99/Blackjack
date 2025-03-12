@@ -1,5 +1,6 @@
 from art import logo
 import random
+import time
 
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
@@ -42,15 +43,23 @@ def blackjack():
                 return
         else:
             break  # User stands
+    
+    # Computer's turn (DO NOT print full hand yet)
+    time.sleep(1)  # Pause before revealing the computer's turn
+    print("\nThe dealer (computer) starts playing...")
 
     # Computer's turn
     while computer_total < 17:
+        time.sleep(1)
         computer_cards.append(random.choice(cards))
         computer_total = calculate_total(computer_cards)
         print(f"Computer hit. Computer's cards: {computer_cards}, score: {computer_total}")
-        
+
+    # NOW Reveal Final Computer Hand
+    print(f"\nComputer's final hand: {computer_cards}, final score: {computer_total}")
 
     # Final comparison
+    time.sleep(1) # Pause for suspense
     if user_total > 21:
         print("You went over. You lose.")
     elif computer_total > 21:
