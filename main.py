@@ -3,87 +3,71 @@ import random
 
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
-isActive = True
+def calculate_total(hand):
+    """Calculates the total of a given hand, adjusting Aces if necessary."""
+    total = sum(hand)
+    while total > 21 and 11 in hand:
+        hand[hand.index(11)] = 1  # Convert Ace (11) to 1
+        total = sum(hand)
+    return total
 
+def display_hand(player, hand, total, hide_second_card=False):
+    """Displays the player's or computer's hand."""
+    if hide_second_card:
+        print(f"{player}'s first card: {hand[0]}, second card is hidden.")
+    else:
+        print(f"{player}'s cards: {hand}, current score: {total}")
 
+def blackjack():
+    """Main function to run a game of Blackjack."""
+    user_cards = random.choices(cards, k=2)
+    computer_cards = [random.choice(cards), random.choice(cards)]
 
+    user_total = calculate_total(user_cards)
+    computer_total = calculate_total(computer_cards)
 
-def main():
-    user_cards = []
-    computer_cards = []
+    display_hand("Your", user_cards, user_total)
+    display_hand("Computer", computer_cards, computer_total, hide_second_card=True)
 
-    user_total = 0
-    computer_total = 0
-
-
-    user_cards = random.choices(cards, k = 2)
-    for card in user_cards:
-        user_total += card
-    print(f"Your cards: {user_cards}, current score: {user_total}")
-
-    computer_cards = [random.choice(cards)]
-    computer_total = sum(computer_cards)
-    print(f"Computer's cards: {computer_cards}, second card is hidden.")
-
-    while user_total < 21:  
+    # User's turn
+    while user_total < 21:
         hit = input("Type 'y' to hit or 'n' to stand: ").lower()
         if hit == 'y':
-            new_card = random.choice(cards)
-            user_cards.append(new_card)
-            user_total += new_card
+            user_cards.append(random.choice(cards))
+            user_total = calculate_total(user_cards)
+            display_hand("Your", user_cards, user_total)
 
-        if user_total > 21 and 11 in user_cards:
-                user_cards[user_cards.index(11)] = 1
-                user_total = sum(user_cards)
-
-        print(f"Your cards: {user_cards}, current score: {user_total}")
-
-        if user_total > 21: 
+            if user_total > 21:
                 print("You went over. You lose.")
-                return   
-        else: 
-            break 
+                return
+        else:
+            break  # User stands
 
-    
-
-    
-    print(f"Computer's final hand: {computer_cards}, final score: {computer_total}")
+    # Computer's turn
     while computer_total < 17:
-        new_computer_card = random.choice(cards)
-        computer_cards.append(new_computer_card)
-        computer_total += new_computer_card
-
-        # Handle Ace (11 -> 1) if over 21
-        if computer_total > 21 and 11 in computer_cards:
-            computer_cards[computer_cards.index(11)] = 1
-            computer_total = sum(computer_cards)
-
-        print(f"Computer drew: {new_computer_card}. Computer's cards: {computer_cards}, current score: {computer_total}")
-
-    if user_total > 21:
-        print("You went over. You lose.")
-        return
-    elif computer_total > 21:
-        print("Computer went over. You win.")
-        return
+        computer_cards.append(random.choice(cards))
+        computer_total = calculate_total(computer_cards)
+        print(f"Computer hit. Computer's cards: {computer_cards}, score: {computer_total}")
+        
 
     # Final comparison
-    print(f"Final scores -> You: {user_total}, Computer: {computer_total}")
-    if user_total > computer_total:
+    if user_total > 21:
+        print("You went over. You lose.")
+    elif computer_total > 21:
+        print("Computer went over. You win!")
+    elif user_total > computer_total:
         print("You win!")
     elif user_total < computer_total:
         print("Computer wins!")
     else:
         print("It's a draw.")
-    
-  
 
+# Game loop
+isActive = True
 while isActive:
     continue_game = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ").lower()
     if continue_game == 'y':
         print(logo)
-        main()
+        blackjack()
     else:
         isActive = False
-
-
