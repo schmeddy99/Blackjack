@@ -5,9 +5,7 @@ A Python-based Blackjack game where the player competes against a computer deale
 ## How to Play
 
     Run the script:
-    ```
     python blackjack.py
-    ```
 
     The player and computer (dealer) start with two cards each.
 
